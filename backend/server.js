@@ -1,12 +1,12 @@
-// backend/server.js → FINAL & PERFECT VERSION (2025 Ready)
+// backend/server.js → FINAL & PERFECT (GROK AI + OpenRouter)
 
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
+const axios = require("axios");
 const { Pool } = require("pg");
-const { OpenAI } = require("openai");
 
 const app = express();
 
@@ -20,8 +20,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "https://examedge-mr-sk534.vercel.app",
-    "https://examedge.vercel.app",
-    "https://yourdomain.com"
+    "https://examedge.vercel.app"
   ],
   credentials: true
 }));
@@ -29,6 +28,9 @@ app.use(cors({
 app.use(morgan("dev"));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use("/api/monthly-planner", require("./routes/monthlyPlannerRoutes"));
+
+
 
 // ==================== DATABASE ====================
 const pool = new Pool({
@@ -38,107 +40,103 @@ const pool = new Pool({
 
 pool.connect((err) => {
   if (err) {
-    console.error("Database connection failed ❌", err.stack);
+    console.error("Database connection failed", err.stack);
     process.exit(1);
   } else {
     console.log("PostgreSQL connected successfully");
   }
 });
 
-// ==================== OPENAI ====================
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 // ==================== HEALTH CHECK ====================
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "ExamEdge Backend is LIVE & Ready for JEE/NEET 2026!",
+    message: "ExamEdge Backend LIVE — Powered by GROK AI",
+    model: "x-ai/grok-4.1-fast:free",
     timestamp: new Date().toISOString(),
-    status: "operational",
-    endpoints: {
-      auth: "/api/auth/register | /api/auth/login",
-      mock: "/api/mock (protected)",
-      doubt: "POST /api/doubt"
-    }
   });
 });
 
 // ==================== ROUTES ====================
-// Auth Routes (register, login, me, logout)
 app.use("/api/auth", require("./routes/auth"));
-
-// Mock Test Routes (protected by JWT)
-app.use("/api/mock", require("./routes/mock"));
-
 app.use("/api/user", require("./routes/user"));
+app.use("/api/mock", require("./routes/mock"));
+app.use("/api/doubt", require("./routes/doubt"));
+app.use("/api/daily-plan", require("./routes/dailyPlanRoutes"));
 
 
-// AI Doubt Solver (Public for now – make protected later if needed)
+
+
+// ==================== AI DOUBT SOLVER — GROK POWERED (ONLY ONE ROUTE) ====================
 app.post("/api/doubt", async (req, res) => {
   try {
-    const { question, userId } = req.body;
+    const { question, targetExam = "JEE Main & Advanced" } = req.body;
 
     if (!question || question.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        error: "Question is required"
-      });
+      return res.status(400).json({ success: false, error: "Question is required" });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "You are ExamEdge AI — India's smartest JEE & NEET tutor. Answer in clear, simple English + Hindi if helpful. Use bullet points, steps, and diagrams (text-based) when possible. Be encouraging and accurate."
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "x-ai/grok-4.1-fast:free",
+        messages: [
+          {
+            role: "system",
+            content: `You are ExamEdge AI — India's smartest tutor for ${targetExam}.
+            Give crystal-clear, step-by-step explanations with:
+            • Simple English + Hindi when helpful
+            • Formulas, bullet points, text-based diagrams
+            • JEE/NEET-level shortcuts & PYQ-style examples
+            • End with: "You've got this! Keep practicing"
+            Keep answers under 600 words but complete.`
+          },
+          { role: "user", content: question }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000
+      },
+      {
+        headers: {
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "HTTP-Referer": "https://examedge-mr-sk534.vercel.app",
+          "X-Title": "ExamEdge - AI Exam Prep",
+          "Content-Type": "application/json"
         },
-        {
-          role: "user",
-          content: question
-        }
-      ],
-      temperature: 0.6,
-      max_tokens: 1000,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0
-    });
+        timeout: 30000
+      }
+    );
 
-    const answer = completion.choices[0].message.content.trim();
+    const answer = response.data.choices[0].message.content.trim();
 
-    res.status(200).json({
+    res.json({
       success: true,
-      answer: answer,
-      usage: completion.usage
+      answer,
+      model: "Grok-4.1-fast (Free via OpenRouter)"
     });
 
   } catch (err) {
-    console.error("OpenAI Error:", err.message);
-    res.status(500).json({
+    console.error("Grok AI Error:", err.response?.data || err.message);
+
+    const errorMessage = err.response?.status === 429
+      ? "Grok is busy (free tier limit). Try again in 30 seconds!"
+      : "AI temporarily down. Please try again!";
+
+    res.status(err.response?.status || 500).json({
       success: false,
-      error: "AI is busy right now. Please try again in a few seconds!"
+      error: errorMessage
     });
   }
 });
 
 // ==================== 404 & ERROR HANDLER ====================
 app.use("*", (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found",
-    path: req.originalUrl
-  });
+  res.status(404).json({ success: false, message: "Route not found", path: req.originalUrl });
 });
 
 app.use((err, req, res, next) => {
-  console.error("Unhandled Error:", err.stack);
-  res.status(500).json({
-    success: false,
-    message: "Internal server error",
-    error: process.env.NODE_ENV === "development" ? err.message : undefined
-  });
+  console.error("Server Error:", err.stack);
+  res.status(500).json({ success: false, message: "Internal server error" });
 });
 
 // ==================== START SERVER ====================
@@ -146,12 +144,11 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log("==================================================");
-  console.log("   EXAMEDGE BACKEND IS LIVE AND RUNNING");
-  console.log(`   Local:      http://localhost:${PORT}`);
-  console.log(`   Deployed:   Check your platform logs`);
-  console.log(`   Time:       ${new Date().toLocaleString("en-IN")}`);
+  console.log("   EXAMEDGE BACKEND LIVE — POWERED BY GROK AI");
+  console.log(`   http://localhost:${PORT}`);
+  console.log(`   AI Model: x-ai/grok-4.1-fast:free`);
+  console.log(`   Time: ${new Date().toLocaleString("en-IN")}`);
   console.log("==================================================");
 });
-module.exports = pool;
 
-module.exports = app; // Required for Vercel, Railway, Render
+module.exports = app;
