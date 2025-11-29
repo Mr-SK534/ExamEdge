@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-
-// FIXED import
 const protect = require("../middleware/auth");
 
-// Import controller
-const { updateProfile } = require("../controllers/userController");
+const { updateProfile, getUserStats } = require("../controllers/userController");
 
-// Protected route
+// Existing route
 router.put("/update-profile", protect, updateProfile);
+
+// New route — for live stats
+router.get("/stats", protect, getUserStats);
 
 module.exports = router;

@@ -1,11 +1,14 @@
-const {Pool} = require("pg");
-require("dotenv").config();
+// backend/config/db.js
+const { Pool } = require('pg');
+require('dotenv').config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production"
-    ? { rejectUnauthorized: false }
-    : false,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
-module.exports = pool; // ✔ CORRECT EXPORT
+pool.on('error', (err) => {
+  console.error('Unexpected PG error', err);
+});
+
+module.exports = pool;
