@@ -1,161 +1,194 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
+import { Card } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function RunMockPage({ params }: any) {
-  const { id } = params;
-  const search = useSearchParams();
-  const exam = search.get("exam") || "jee";
-
+export default function MockTestPage() {
+  const router = useRouter();
   const [mock, setMock] = useState<any>(null);
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<{ [key: number]: number }>({});
   const [timeLeft, setTimeLeft] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const token =
-    typeof window !== "undefined"
-      ? localStorage.getItem("accessToken")
-      : null;
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    loadMock();
-  }, []);
+    const saved = localStorage.getItem("currentMock");
+    const startTime = localStorage.getItem("mockStartTime");
 
-  useEffect(() => {
-    if (timeLeft > 0 && !submitted) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && mock && !submitted) {
-      handleSubmit();
+    if (!saved || !startTime) {
+      toast.error("No active test!");
+      router.push("/mock-test");
+      return;
     }
-  }, [timeLeft, submitted]);
 
-  async function loadMock() {
-    try {
-      const res = await fetch(
-        `http://localhost:5000/api/mockexam/load/${exam}/${id}`
-      );
+    const mockData = JSON.parse(saved);
+    setMock(mockData);
 
-      const data = await res.json();
-      setMock(data.mock);
-      setTimeLeft((data.mock.duration || 180) * 60);
-    } catch (err) {
-      toast.error("Failed to load mock");
-    }
-  }
+    const totalSeconds = (mockData.duration || 180) * 60;
+    const elapsed = Math.floor((Date.now() - parseInt(startTime)) / 1000);
+    const remaining = Math.max(0, totalSeconds - elapsed);
+    setTimeLeft(remaining);
 
-  const formatTime = (sec: number) => {
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    return `${m}:${s.toString().padStart(2, "0")}`;
-  };
+    // Timer
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          handleFinalSubmit();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-  const handleSubmit = async () => {
-    if (!mock) return;
+    return () => clearInterval(timer);
+  }, [router]);
 
-    let score = 0;
+  const handleFinalSubmit = () => {
+    if (isFinished) return;
+    setIsFinished(true);
 
-    mock.questions.forEach((q: any) => {
-      const ans = answers[q.id];
-      if (q.type === "mcq") {
-        if (ans === q.answer) score += 4;
-        else if (ans !== undefined) score -= 1;
-      } else {
-        if (Number(ans) === Number(q.answer)) score += 4;
-        else if (ans !== undefined) score -= 1;
-      }
+    let correct = 0;
+    mock.questions.forEach((q: any, i: number) => {
+      if (answers[i] === q.correctAnswer) correct++;
     });
 
-    setSubmitted(true);
+    const totalQ = mock.questions.length;
+    const wrong = Object.keys(answers).length - correct;
+    const marks = correct * 4 - wrong * 1;
 
-    // save to backend
-    const res = await fetch("http://localhost:5000/api/mock-history/save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
-      body: JSON.stringify({
-        mock_name: mock.name,
-        score,
-        total_marks: mock.questions.length * 4
-      })
-    });
+    const result = {
+      mockId: mock.id || "unknown",
+      mockTitle: mock.title || "JEE Mock Test",
+      marks,
+      correct,
+      wrong,
+      unattempted: totalQ - Object.keys(answers).length,
+      percentage: ((correct / totalQ) * 100).toFixed(2),
+      timeTaken: (mock.duration * 60) - timeLeft,
+      total: totalQ,
+    };
 
-    const data = await res.json();
-    if (!res.ok) toast.error("Save failed");
-    else toast.success("Result saved!");
+    localStorage.setItem("lastMockResult", JSON.stringify(result));
+    localStorage.removeItem("currentMock");
+    localStorage.removeItem("mockStartTime");
+
+    toast.success("Test Submitted! Calculating results...", { duration: 2000 });
+
+    setTimeout(() => {
+      router.push("/mock-test/result");
+    }, 1500);
   };
 
-  if (!mock)
-    return (
-      <p className="text-center text-white mt-20">Loading mock test...</p>
-    );
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
-  if (submitted)
-    return (
-      <div className="text-center text-white mt-20">
-        <h1 className="text-4xl font-bold mb-6">{mock.name}</h1>
-        <p className="text-3xl">Your answers submitted!</p>
-        <Button onClick={() => (window.location.href = "/mock-test")}>
-          Back to Tests
-        </Button>
-      </div>
-    );
+  if (!mock) return null;
+
+  const q = mock.questions[currentQuestion];
 
   return (
-    <div className="min-h-screen text-white p-6 bg-black">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-4">{mock.name}</h1>
-
-        <div className="flex justify-between mb-4">
-          <span>Time Left: {formatTime(timeLeft)}</span>
-          <Button onClick={handleSubmit}>Submit</Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-black to-purple-950 text-white">
+      {/* Header */}
+      <div className="bg-black/70 backdrop-blur border-b border-white/10 p-6 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-cyan-400">{mock.title}</h1>
+            <p className="text-gray-300">
+              Q{currentQuestion + 1} / {mock.questions.length}
+            </p>
+          </div>
+          <div className="text-5xl font-mono font-bold text-red-500 animate-pulse">
+            {formatTime(timeLeft)}
+          </div>
         </div>
+      </div>
 
-        {mock.questions.map((q: any) => (
-          <Card
-            key={q.id}
-            className="p-6 my-4 bg-white/10 text-white border border-white/20"
-          >
-            <h2 className="text-xl font-semibold">{q.id}. {q.question}</h2>
+      <div className="max-w-4xl mx-auto p-8">
+        <Card className="bg-white/5 backdrop-blur-xl border-white/10 p-10 mt-10 shadow-2xl">
+          <div className="text-2xl md:text-3xl font-medium mb-10 leading-relaxed">
+            Q{currentQuestion + 1}. {q.question}
+          </div>
 
-            {q.type === "mcq" ? (
-              <div className="mt-4 space-y-2">
-                {q.options.map((opt: string, idx: number) => (
-                  <label
-                    key={idx}
-                    className="flex items-center gap-3 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      name={`q${q.id}`}
-                      onChange={() =>
-                        setAnswers({ ...answers, [q.id]: idx })
-                      }
-                      checked={answers[q.id] === idx}
-                    />
-                    {opt}
-                  </label>
-                ))}
+          <div className="space-y-6">
+            {q.options.map((opt: string, i: number) => (
+              <Button
+                key={i}
+                variant={answers[currentQuestion] === i ? "default" : "outline"}
+                className={`w-full text-left text-lg py-8 px-8 justify-start h-auto transition-all ${
+                  answers[currentQuestion] === i
+                    ? "bg-cyan-600 hover:bg-cyan-500 border-cyan-400"
+                    : "border-white/30 hover:bg-white/10"
+                }`}
+                onClick={() => setAnswers({ ...answers, [currentQuestion]: i })}
+              >
+                <span className="font-bold text-xl mr-4">{String.fromCharCode(65 + i)}.</span>
+                {opt}
+              </Button>
+            ))}
+          </div>
+
+          {/* BOTTOM BAR WITH SUBMIT BUTTON */}
+          <div className="mt-16 pt-8 border-t border-white/20">
+            <div className="flex justify-between items-center">
+              <Button
+                variant="outline"
+                size="lg"
+                disabled={currentQuestion === 0}
+                onClick={() => setCurrentQuestion(c => c - 1)}
+              >
+                ← Previous
+              </Button>
+
+              {/* FINAL SUBMIT BUTTON — ALWAYS VISIBLE ON LAST QUESTION */}
+              {currentQuestion === mock.questions.length - 1 && (
+                <Button
+                  onClick={handleFinalSubmit}
+                  disabled={isFinished}
+                  className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-xl font-bold px-16 py-8 rounded-xl shadow-2xl transform hover:scale-105 transition-all"
+                >
+                  {isFinished ? "Submitting..." : "FINAL SUBMIT TEST"}
+                </Button>
+              )}
+
+              {currentQuestion < mock.questions.length - 1 && (
+                <Button
+                  size="lg"
+                  onClick={() => setCurrentQuestion(c => c + 1)}
+                  className="bg-gradient-to-r from-emerald-500 to-cyan-600"
+                >
+                  Next →
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Question Palette */}
+          <div className="flex justify-center gap-3 mt-10 flex-wrap">
+            {mock.questions.map((_: any, i: number) => (
+              <div
+                key={i}
+                onClick={() => setCurrentQuestion(i)}
+                className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold cursor-pointer transition-all ${
+                  i === currentQuestion
+                    ? "bg-yellow-500 text-black scale-125"
+                    : answers[i] !== undefined
+                    ? "bg-cyan-500"
+                    : "bg-gray-700 hover:bg-gray-600"
+                }`}
+              >
+                {i + 1}
               </div>
-            ) : (
-              <input
-                type="number"
-                className="mt-4 bg-black/40 p-2 border rounded"
-                placeholder="Enter integer answer"
-                onChange={(e) =>
-                  setAnswers({ ...answers, [q.id]: e.target.value })
-                }
-              />
-            )}
-          </Card>
-        ))}
+            ))}
+          </div>
+        </Card>
       </div>
     </div>
   );
 }
-
