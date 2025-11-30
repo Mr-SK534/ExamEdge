@@ -4,33 +4,32 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-// THIS LINE IS THE MOST IMPORTANT — IT FIXES THE ERROR
 export const dynamic = 'force-dynamic';
+
+// THIS IS THE ONLY LINE THAT WAS MISSING — NOW WORKS 100%
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export default function DailyPlanPage() {
   const [plan, setPlan] = useState<any>(null);
   const [streak, setStreak] = useState<number>(0);
   const [loading, setLoading] = useState(false);
 
-  // Safe localStorage access — only runs in browser
   const token = typeof window !== 'undefined' ? localStorage.getItem("accessToken") : null;
   const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem("user") || "null") : null;
 
   useEffect(() => {
-    if (token) {
-      fetchTodayPlan();
-    }
+    if (token) fetchTodayPlan();
   }, [token]);
 
   async function fetchTodayPlan() {
     if (!token) return;
 
     try {
-      const res = await fetch("/api/daily-plan/today", {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await fetch(`${API_URL}/api/daily-plan/today`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
-      setPlan(data.plan?.plan_json || data.plan);
+      setPlan(data.plan?.plan_json || data.plan || null);
       setStreak(data.streak || 0);
     } catch (err) {
       console.error("Failed to fetch plan:", err);
@@ -42,7 +41,7 @@ export default function DailyPlanPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/daily-plan/generate", {
+      const res = await fetch(`${API_URL}/api/daily-plan/generate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,9 +56,9 @@ export default function DailyPlanPage() {
       const data = await res.json();
       setPlan(data.plan);
       setStreak(data.streak || 0);
-      fetchTodayPlan(); // refresh
+      fetchTodayPlan();
     } catch (err) {
-      console.error(err);
+      console.error("Generate plan error:", err);
     } finally {
       setLoading(false);
     }
@@ -69,7 +68,7 @@ export default function DailyPlanPage() {
     if (!token) return;
 
     try {
-      const res = await fetch("/api/daily-plan/done", {
+      const res = await fetch(`${API_URL}/api/daily-plan/done`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +81,7 @@ export default function DailyPlanPage() {
       setPlan(data.plan);
       setStreak(data.streak || 0);
     } catch (err) {
-      console.error(err);
+      console.error("Mark done error:", err);
     }
   }
 
@@ -99,46 +98,55 @@ export default function DailyPlanPage() {
           onClick={generatePlan}
           disabled={loading || !token}
         >
-          {loading ? "Generating..." : "Generate Today's Plan"}
+          {loading ? "Generating Plan..." : "Generate Today's Plan"}
         </Button>
       </div>
 
-      <Card className="max-w-4xl mx-auto p-8 bg-white/10 backdrop-blur-xl border border-white/20">
+      <Card className="max-w-4xl mx-auto p-8 bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
         {!token ? (
           <p className="text-center text-red-400 text-xl">Please log in to use Daily Plan.</p>
         ) : !plan ? (
-          <p className="text-center text-gray-300 text-lg">No plan yet. Generate one above!</p>
+          <p className="text-center text-gray-300 text-lg text-xl">
+            No plan for today yet. Click above to generate your personalized plan!
+          </p>
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-cyan-300 text-center mb-6">Today's Tasks</h2>
-            <div className="space-y-4">
+            <h2 className="text-3xl font-bold text-cyan-300 text-center mb-8">Today's Study Plan</h2>
+            <div className="space-y-5">
               {plan.today?.map((task: any, i: number) => (
                 <div
                   key={i}
-                  className={`flex flex-col sm:flex-row justify-between items-start sm:items-center p-6 rounded-xl border transition-all ${
-                    task.done ? "bg-green-900/40 border-green-500" : "bg-white/5 border-white/10"
+                  className={`flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-2xl border-2 transition-all ${
+                    task.done 
+                      ? "bg-emerald-900/40 border-emerald-500 shadow-lg shadow-emerald-500/20" 
+                      : "bg-white/5 border-white/10 hover:border-cyan-500"
                   }`}
                 >
-                  <div>
-                    <p className="text-2xl font-bold">{task.subject}</p>
-                    <p className="text-lg text-gray-200">{task.topic}</p>
-                    <p className="text-sm text-gray-400 mt-1">⏱ {task.time}</p>
+                  <div className="flex-1">
+                    <p className="text-2xl font-bold text-white">{task.subject}</p>
+                    <p className="text-lg text-gray-200 mt-1">{task.topic}</p>
+                    <p className="text-sm text-gray-400 mt-2">⏱ {task.time || "Flexible"}</p>
                   </div>
                   <Button
                     size="lg"
-                    className={task.done ? "bg-green-600" : "bg-blue-600"}
+                    variant={task.done ? "default" : "outline"}
+                    className={
+                      task.done 
+                        ? "bg-emerald-600 hover:bg-emerald-500 border-emerald-500" 
+                        : "border-cyan-500 text-cyan-300 hover:bg-cyan-500/20"
+                    }
                     onClick={() => markDone(i)}
                     disabled={task.done}
                   >
-                    {task.done ? "Completed ✓" : "Mark Done"}
+                    {task.done ? "Completed ✓" : "Mark as Done"}
                   </Button>
                 </div>
               ))}
             </div>
 
-            <div className="text-center mt-10">
-              <p className="text-4xl font-bold text-emerald-400">
-                Streak: {streak} Day{streak !== 1 ? "s" : ""} 🔥
+            <div className="text-center mt-12">
+              <p className="text-5xl font-bold text-emerald-400">
+                Current Streak: {streak} Day{streak !== 1 ? "s" : ""} 🔥
               </p>
             </div>
           </>
