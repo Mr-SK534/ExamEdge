@@ -89,8 +89,8 @@ export default function MockPreviewPage() {
           <div className="text-center space-y-6 text-xl text-gray-200 mb-12">
             <p>⏱ <strong>{mock.duration} minutes</strong></p>
             <p>❓ <strong>{mock.questions?.length || 90} questions</strong></p>
-            <p>📊 Full Syllabus • JEE Main Pattern</p>
-            <p className="text-yellow-300 font-bold">+100 XP on completion</p>
+            <p>📊 Full Syllabus</p>
+            <p className="text-yellow-300 font-bold"></p>
           </div>
 
           <div className="text-center space-y-6">
