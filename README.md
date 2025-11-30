@@ -8,6 +8,9 @@ Currently featuring 4 major exams — **JEE Main • NEET • BITSAT • VITEEE*
 
 *Live Demo:* [https://exam-edge-five.vercel.app/](https://exam-edge-five.vercel.app/)
 
+**Test it instantly (dummy login):**  
+Email: `abc@gmail.com`  
+Password: `abc123`
 ---
 
 ## 🚀 Features
