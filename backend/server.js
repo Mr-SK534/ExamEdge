@@ -8,7 +8,27 @@ const { Pool } = require("pg");
 
 const app = express();
 
-// SECURITY
+// ============================================
+// 🔴 ENVIRONMENT VARIABLES VALIDATION
+// ============================================
+const requiredEnvVars = ["DATABASE_URL", "OPENROUTER_API_KEY"];
+const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
+
+if (missingVars.length > 0) {
+  console.error("==================================================");
+  console.error("❌ MISSING ENVIRONMENT VARIABLES:");
+  missingVars.forEach((varName) => {
+    console.error(`   - ${varName}`);
+  });
+  console.error("==================================================");
+  console.error("Please set these in Render Dashboard → Environment tab");
+  console.error("==================================================");
+  process.exit(1);
+}
+
+// ============================================
+// MIDDLEWARE
+// ============================================
 app.use(
   helmet({
     contentSecurityPolicy: false,
@@ -16,7 +36,6 @@ app.use(
   })
 );
 
-// CORS
 app.use(
   cors({
     origin: [
@@ -32,22 +51,40 @@ app.use(morgan("dev"));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// DATABASE
+// ============================================
+// 🗄️ DATABASE CONNECTION
+// ============================================
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : false,
 });
 
-pool.connect((err) => {
+// Make pool accessible to routes
+app.set("db", pool);
+
+// Test database connection
+pool.connect((err, client, release) => {
   if (err) {
-    console.error("Database connection failed", err.stack);
+    console.error("==================================================");
+    console.error("❌ DATABASE CONNECTION FAILED");
+    console.error("Error:", err.message);
+    console.error("==================================================");
+    console.error("Check your DATABASE_URL format:");
+    console.error("postgresql://username:password@host:5432/database?sslmode=require");
+    console.error("==================================================");
     process.exit(1);
   } else {
-    console.log("PostgreSQL connected successfully");
+    release();
+    console.log("✅ PostgreSQL connected successfully");
   }
 });
 
-// HEALTH CHECK
+// ============================================
+// ROUTES
+// ============================================
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -57,21 +94,22 @@ app.get("/", (req, res) => {
   });
 });
 
-// ROUTES
+// Health check endpoint for Render
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/user", require("./routes/user"));
-// ❌ REMOVED OLD mock.js ROUTE
-// app.use("/api/mock", require("./routes/mock"));
-
 app.use("/api/mock-history", require("./routes/mockHistoryRoutes"));
 app.use("/api/mockexam", require("./routes/mockExamRoutes"));
 app.use("/api/doubt", require("./routes/doubt"));
 app.use("/api/daily-plan", require("./routes/dailyPlanRoutes"));
 app.use("/api/ai", require("./routes/aiRoutes"));
-app.use("/api/mockexam", require("./routes/mockExamRoutes"));
 
-
-// AI DOUBT
+// ============================================
+// AI DOUBT SOLVER ENDPOINT
+// ============================================
 app.post("/api/ai/doubt", async (req, res) => {
   try {
     const { question, targetExam = "JEE Main & Advanced" } = req.body;
@@ -130,7 +168,9 @@ app.post("/api/ai/doubt", async (req, res) => {
   }
 });
 
-// 404
+// ============================================
+// 404 HANDLER
+// ============================================
 app.use("*", (req, res) => {
   res.status(404).json({
     success: false,
@@ -139,17 +179,22 @@ app.use("*", (req, res) => {
   });
 });
 
+// ============================================
 // ERROR HANDLER
+// ============================================
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
   res.status(500).json({ success: false, message: "Internal server error" });
 });
 
-// START
+// ============================================
+// START SERVER
+// ============================================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("==================================================");
-  console.log("   EXAMEDGE BACKEND LIVE — POWERED BY GROK AI");
-  console.log(`   http://localhost:${PORT}`);
+  console.log("   ✅ EXAMEDGE BACKEND LIVE — POWERED BY GROK AI");
+  console.log(`   🌐 Port: ${PORT}`);
+  console.log(`   📊 Environment: ${process.env.NODE_ENV || "development"}`);
   console.log("==================================================");
 });
