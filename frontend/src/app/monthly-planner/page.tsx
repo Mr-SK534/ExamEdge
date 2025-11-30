@@ -76,10 +76,10 @@ export default function MonthlyPlannerPage() {
                 onChange={(e) => setExam(e.target.value)}
                 className="w-full mt-3 p-4 rounded-xl bg-white/10 border border-white/20 text-white text-lg focus:border-cyan-400 focus:outline-none transition"
               >
-                <option value="JEE">JEE Main + Advanced</option>
-                <option value="NEET">NEET</option>
-                <option value="VITEEE">VITEEE</option>
-                <option value="BITSAT">BITSAT</option>
+                <option value="JEE" className="bg-gray-900 text-white">JEE Main + Advanced</option>
+                <option value="NEET" className="bg-gray-900 text-white" >NEET</option>
+                <option value="VITEEE" className="bg-gray-900 text-white">VITEEE</option>
+                <option value="BITSAT" className="bg-gray-900 text-white">BITSAT</option>
               </select>
             </div>
 
@@ -141,7 +141,7 @@ export default function MonthlyPlannerPage() {
 
         {loading && (
           <div className="text-center py-20">
-            <p className="text-3xl text-cyan-300 animate-pulse">Grok is creating your perfect plan...</p>
+            <p className="text-3xl text-cyan-300 animate-pulse">Creating your perfect plan...</p>
           </div>
         )}
       </div>
