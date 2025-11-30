@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://examedge-backend.onrender.com/api/$1"
+    }
+  ],
+  "functions": {
+    "api/**/*": {
+      "maxDuration": 30
+    }
+  }
+}
