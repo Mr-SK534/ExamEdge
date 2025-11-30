@@ -1,0 +1,88 @@
+
+{
+  "id": "mock1",
+  "name": "Mock-Exam",
+  "paper_name": "Mock-1",
+  "duration_minutes": 180,
+  "total_questions": 90,
+  "max_marks": 300,
+  "instructions": [
+    "Time: 3 hours",
+    "This test paper consists of 90 questions. Each subject (Physics, Chemistry & Mathematics) has 30 questions.",
+    "Section-A: 20 Multiple Choice Questions (MCQs) → +4 correct, –1 wrong",
+    "Section-B: 10 Numerical Answer Type Questions → +4 correct, 0 wrong (no negative)",
+    "You have to attempt all 20 questions of Section-A and any 5 out of 10 from Section-B in each subject.",
+    "Maximum Marks: 300"
+  ],
+  "marks_scheme": {
+    "mcq": { "correct": 4, "wrong": -1 },
+    "integer": { "correct": 4, "wrong": 0 }
+  },
+  "questions": [
+  
+    {"id":1,"type":"mcq","subject":"Physics","question":"A light wave has plane wavefronts given by x + y + z = constant. The angle made by direction of propagation with x-axis is:","options":["cos⁻¹(1/√3)","cos⁻¹(√3)","cos⁻¹(1/3)","cos⁻¹(√2/3)"],"answer":0},
+    {"id":2,"type":"mcq","subject":"Physics","question":"In van der Waals equation (P + a/V²)(V − b) = RT, the dimension of 'ab' is same as:","options":["Energy","Pressure","Force","Energy density"],"answer":3},
+    {"id":3,"type":"mcq","subject":"Physics","question":"A wheel (mass 10 kg, radius 0.1 m) has a light string wound around it. A constant force 20 N is applied. After string unwinds 1 m, angular velocity of wheel is:","options":["10 rad/s","20 rad/s","30 rad/s","40 rad/s"],"answer":1},
+    {"id":4,"type":"mcq","subject":"Physics","question":"For adiabatic process, correct statement is:","options":["ΔU = −W","ΔU = q","ΔU = 0","q = 0"],"answer":0},
+    {"id":5,"type":"mcq","subject":"Physics","question":"A zener diode of 5 V is used to regulate 25 V supply. Series resistor = 400 Ω and Iz = 4 IL. Load current IL is:","options":["10 mA","20 mA","5 mA","4 mA"],"answer":0},
+    {"id":6,"type":"mcq","subject":"Physics","question":"Maximum power delivered by a battery of emf 12 V and internal resistance 2 Ω is:","options":["18 W","36 W","72 W","9 W"],"answer":0},
+    {"id":7,"type":"mcq","subject":"Physics","question":"Magnetic field at centre of circular loop of radius R carrying current I is B. If radius becomes R/2 and current 4I, new field is:","options":["8B","4B","16B","2B"],"answer":2},
+    {"id":8,"type":"mcq","subject":"Physics","question":"In Young’s double slit experiment, fringe width β becomes 2β when:","options":["Distance between slits doubled","Distance between slits & screen doubled","Wavelength doubled","Slit width halved"],"answer":1},
+    {"id":9,"type":"mcq","subject":"Physics","question":"A particle executes two SHM: x₁ = 5 sin ωt cm, x₂ = 5 sin(ωt + π/2) cm. Amplitude of resultant is:","options":["5 cm","5√2 cm","10 cm","0"],"answer":1},
+    {"id":10,"type":"mcq","subject":"Physics","question":"Escape velocity from Earth’s surface is nearly:","options":["11.2 km/s","9.8 km/s","7.9 km/s","25 km/s"],"answer":0},
+    {"id":11,"type":"mcq","subject":"Physics","question":"Electric flux through a closed surface enclosing charge Q is:","options":["Q/ε₀","Qε₀","Zero","Depends on shape"],"answer":0},
+    {"id":12,"type":"mcq","subject":"Physics","question":"Resistivity of a wire depends on:","options":["Length","Area","Material","Temperature"],"answer":2},
+    {"id":13,"type":"mcq","subject":"Physics","question":"In LCR series circuit at resonance, impedance is:","options":["Maximum","Minimum","Zero","Infinite"],"answer":1},
+    {"id":14,"type":"mcq","subject":"Physics","question":"Half-life of a radioactive element is 10 days. After 20 days, fraction left is:","options":["1/2","1/4","1/8","Zero"],"answer":1},
+    {"id":15,"type":"mcq","subject":"Physics","question":"de-Broglie wavelength is proportional to:","options":["1/√V","1/V","√V","V"],"answer":0},
+    {"id":16,"type":"mcq","subject":"Physics","question":"Photoelectric effect supports:","options":["Wave nature","Particle nature","Both","None"],"answer":1},
+    {"id":17,"type":"mcq","subject":"Physics","question":"Unit of electric field intensity is:","options":["N/C","V/m","Both (1) & (2)","J/C"],"answer":2},
+    {"id":18,"type":"mcq","subject":"Physics","question":"In transformer, power loss is minimum in:","options":["Step-up","Step-down","Both same","Depends on load"],"answer":2},
+    {"id":19,"type":"mcq","subject":"Physics","question":"Speed of sound is maximum in:","options":["Air","Water","Steel","Vacuum"],"answer":2},
+    {"id":20,"type":"mcq","subject":"Physics","question":"Dimensional formula of impulse is same as:","options":["Momentum","Force","Energy","Power"],"answer":0},
+
+ 
+    {"id":21,"type":"integer","subject":"Physics","question":"Angular velocity of wheel after 1 m unwinding (in rad/s) =","answer":20},
+    {"id":22,"type":"integer","subject":"Physics","question":"Energy stored in 12 V, 4000 mAh battery (in kJ) =","answer":173},
+    {"id":23,"type":"integer","subject":"Physics","question":"Maximum power (in watt) from battery of emf 12 V and r = 3 Ω =","answer":12},
+    {"id":24,"type":"integer","subject":"Physics","question":"Time period of simple pendulum on moon if on earth it is 2 s (g_moon = g/6) =","answer":5},
+    {"id":25,"type":"integer","subject":"Physics","question":"A ball is dropped from height h. Velocity on reaching ground (in terms of √(2gh)) =","answer":1},
+    {"id":26,"type":"integer","subject":"Physics","question":"Work done to move 5 C charge through 10 V =","answer":50},
+    {"id":27,"type":"integer","subject":"Physics","question":"Wavelength if v = 340 m/s, f = 170 Hz (in metre) =","answer":2},
+    {"id":28,"type":"integer","subject":"Physics","question":"Power of lens of focal length 25 cm (in dioptre) =","answer":4},
+    {"id":29,"type":"integer","subject":"Physics","question":"Number of images formed by two mirrors at 60° =","answer":5},
+    {"id":30,"type":"integer","subject":"Physics","question":"Binding energy per nucleon is highest for: (atomic mass number) ≈","answer":56},
+
+
+    {"id":31,"type":"mcq","subject":"Chemistry","question":"The largest natural number n such that 3ⁿ divides 50! is:","options":["20","21","22","23"],"answer":3},
+    {"id":32,"type":"mcq","subject":"Chemistry","question":"Hybridisation of Xe in XeF₄ is:","options":["sp³","sp³d","sp³d²","sp³d³"],"answer":2},
+    {"id":33,"type":"mcq","subject":"Chemistry","question":"Correct order of boiling point:","options":["HF > HCl > HBr > HI","HI > HBr > HCl > HF","HF > HI > HBr > HCl","HCl > HF > HBr > HI"],"answer":1},
+    {"id":34,"type":"mcq","subject":"Chemistry","question":"Which has maximum covalent character?","options":["NaCl","MgCl₂","AlCl₃","SiCl₄"],"answer":2},
+    {"id":35,"type":"mcq","subject":"Chemistry","question":"Correct order of acidic strength:","options":["HClO₄ > HClO₃ > HClO₂ > HClO","HClO > HClO₂ > HClO₃ > HClO₄","HClO₃ > HClO₄ > HClO₂ > HClO","HClO₄ > HClO₂ > HClO₃ > HClO"],"answer":0},
+
+   
+    {"id":51,"type":"integer","subject":"Chemistry","question":"Atomic number of element with electron configuration [Ar] 4s¹ 3d⁵ =","answer":24},
+    {"id":52,"type":"integer","subject":"Chemistry","question":"pH of 0.001 M HCl =","answer":3},
+    {"id":53,"type":"integer","subject":"Chemistry","question":"Number of moles in 44 g CO₂ =","answer":1},
+    {"id":54,"type":"integer","subject":"Chemistry","question":"Oxidation state of Cr in K₂Cr₂O₇ =","answer":6},
+    {"id":55,"type":"integer","subject":"Chemistry","question":"Number of π bonds in benzene =","answer":3},
+
+    {"id":61,"type":"mcq","subject":"Mathematics","question":"The largest n such that 3ⁿ divides 50! is:","options":["21","22","23","24"],"answer":2},
+    {"id":62,"type":"mcq","subject":"Mathematics","question":"Focus of hyperbola is (√10,0), directrix x = 9/√10. Then 9(e + l) =","options":["12","15","18","21"],"answer":1},
+    {"id":63,"type":"mcq","subject":"Mathematics","question":"Number of 10-term A.P. with a₁=1, a₃=5, a₇=9 is:","options":["0","1","2","3"],"answer":2},
+    {"id":64,"type":"mcq","subject":"Mathematics","question":"lim(x→π) sin(x)/(x−π) =","options":["−1","1","0","∞"],"answer":0},
+    {"id":65,"type":"mcq","subject":"Mathematics","question":"Area bounded by |x| + |y| = 1 is:","options":["1","2","4","√2"],"answer":1},
+
+   
+    {"id":81,"type":"integer","subject":"Mathematics","question":"∫₀¹ x dx =","answer":1},
+    {"id":82,"type":"integer","subject":"Mathematics","question":"Sum of first 10 natural numbers =","answer":55},
+    {"id":83,"type":"integer","subject":"Mathematics","question":"Number of prime numbers below 20 =","answer":8},
+    {"id":84,"type":"integer","subject":"Mathematics","question":"Value of 5! =","answer":120},
+    {"id":85,"type":"integer","subject":"Mathematics","question":"Roots of x² − 7x + 12 = 0 are 3 and","answer":4},
+    {"id":86,"type":"integer","subject":"Mathematics","question":"For the given odd function f satisfying the functional equation, 9f(ln 3) =","answer":36},
+    {"id":87,"type":"integer","subject":"Mathematics","question":"Area of triangle with sides 5,12,13 =","answer":30},
+    {"id":88,"type":"integer","subject":"Mathematics","question":"sin 60° = √3/2, then numerical value (multiply by 2) =","answer":1},
+    {"id":89,"type":"integer","subject":"Mathematics","question":"Number of subsets of a 4-element set =","answer":16},
+    {"id":90,"type":"integer","subject":"Mathematics","question":"|r₁² − r₂²| for circles through (−9,4) touching x±y=3 is","answer":768}
+  ]
+}

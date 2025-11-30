@@ -1,0 +1,68 @@
+{
+  "id": "mock2",
+  "name": "Mock-Exam",
+  "paper_name": "Mock-2",
+  "duration_minutes": 180,
+  "total_questions": 90,
+  "max_marks": 300,
+  "instructions": [
+    "Time: 3 Hours | Maximum Marks: 300",
+    "Each subject (Physics, Chemistry, Mathematics) has 30 questions",
+    "Section-A: 20 MCQs → +4 correct, –1 wrong",
+    "Section-B: 10 Numerical → +4 correct, 0 wrong",
+    "This is a high-difficulty mock specially designed for 99.9+ percentile aspirants"
+  ],
+  "marks_scheme": {
+    "mcq": { "correct": 4, "wrong": -1 },
+    "integer": { "correct": 4, "wrong": 0 }
+  },
+  "questions": [
+  
+    {"id":1,"type":"mcq","subject":"Physics","question":"A charged particle (q, m) enters a region having uniform perpendicular electric and magnetic fields (E and B). The particle moves in a straight line. The angle between velocity and B is θ. Then sinθ equals:","options":["E/Bv","vB/E","qE/qBv","qB/qE"],"answer":0},
+    {"id":2,"type":"mcq","subject":"Physics","question":"A uniform sphere has a cavity inside it. The sphere is given charge Q and rotated with angular velocity ω about a diameter. Magnetic moment of the system is:","options":["(1/5)QωR⁴","(2/5)QωR⁴","(3/5)QωR⁴","Zero"],"answer":3},
+    {"id":3,"type":"mcq","subject":"Physics","question":"A photon of energy 10.2 eV collides elastically with a stationary hydrogen atom in ground state. After collision, photon moves at 90° to initial direction. The kinetic energy of recoiled electron is:","options":["1.2 eV","2.4 eV","3.4 eV","4.8 eV"],"answer":2},
+    {"id":4,"type":"mcq","subject":"Physics","question":"A particle of mass m is tied to a string and moved in a vertical circle. At the highest point, the tension is 5mg and speed is u. At the lowest point, tension is:","options":["6mg + mu²/R","6mg - mu²/R","7mg","5mg + mu²/R"],"answer":0},
+    {"id":5,"type":"mcq","subject":"Physics","question":"A system consists of two identical blocks each of mass m connected by a massless spring of constant k. The system is released from height h on a fixed wedge. Maximum compression of spring is:","options":["mg/k + √(2mgh/k)","2mg/k + √(2mgh/k)","mg/k + √(mgh/k)","2mg/k + √(mgh/k)"],"answer":1},
+
+   
+    {"id":21,"type":"integer","subject":"Physics","question":"A particle starts from rest at the top of a fixed hemisphere of radius R. It slides down without friction. At what height from bottom does it leave the surface? Answer in terms of R (numerical coefficient only, e.g. if 5R/3 then answer 5):","answer":5},
+    {"id":22,"type":"integer","subject":"Physics","question":"A uniform rod of length L and mass M is pivoted at one end and released from horizontal position. When it becomes vertical, angular velocity ω = √(x g / L). The value of x is:","answer":6},
+    {"id":23,"type":"integer","subject":"Physics","question":"Three identical capacitors of capacitance C are connected to a battery of emf V. Finally the energy stored is (α CV²). The value of α is:","answer":3},
+    {"id":24,"type":"integer","subject":"Physics","question":"A progressive wave is represented by y = 10 sin(1000πt − πx/10) cm. Maximum particle velocity (cm/s) =","answer":10000},
+    {"id":25,"type":"integer","subject":"Physics","question":"A radioactive sample has N₀ nuclei at t=0. After 3 half-lives, number of nuclei decayed =","answer":7},
+    {"id":26,"type":"integer","subject":"Physics","question":"A convex lens forms real image of object at 30 cm. When lens is moved 10 cm towards object, image moves 30 cm away. Focal length (cm) =","answer":15},
+    {"id":27,"type":"integer","subject":"Physics","question":"A satellite is revolving very close to earth. If its kinetic energy is increased by 0.5%, the increase in orbital radius (%) =","answer":1},
+    {"id":28,"type":"integer","subject":"Physics","question":"A charged particle moves in a circle of radius 10 cm in magnetic field 1 T. Time period (in μs) if speed is 3×10⁷ m/s and q/m = 10⁸ C/kg =","answer":209},
+    {"id":29,"type":"integer","subject":"Physics","question":"A liquid of density ρ is filled in a U-tube. One limb is heated so temperature increases by ΔT. Difference in levels (cm) = βγΔT × 10⁻², where β is volume expansion coefficient and γ is height. Value of βγΔT × 10⁴ =","answer":36},
+    {"id":30,"type":"integer","subject":"Physics","question":"A system of two soap bubbles of radii R and 2R are connected by a tube with stopcock. When opened, final radius ratio R₁:R₂ = n:1, then n =","answer":2},
+
+    
+    {"id":31,"type":"mcq","subject":"Chemistry","question":"The spin only magnetic moment of [Fe(H₂O)₅NO]SO₄ is close to:","options":["1.73 BM","3.87 BM","4.90 BM","5.92 BM"],"answer":1},
+    {"id":32,"type":"mcq","subject":"Chemistry","question":"For the reaction 2A + B → C + D, rate = k[A]²[B]. If concentration of A is doubled and B is halved, rate becomes x times. x =","options":["2","4","1","8"],"answer":2},
+    {"id":33,"type":"mcq","subject":"Chemistry","question":"The number of geometrical isomers of [Ma₃b₂c] is:","options":["2","3","4","1"],"answer":0},
+    {"id":34,"type":"mcq","subject":"Chemistry","question":"Correct order of bond angle in H₂O, NH₃, CH₄, CO₂ is:","options":["H₂O < NH₃ < CH₄ < CO₂","NH₃ < H₂O < CO₂ < CH₄","CO₂ < CH₄ < NH₃ < H₂O","CH₄ < CO₂ < NH₃ < H₂O"],"answer":0},
+
+ 
+    {"id":51,"type":"integer","subject":"Chemistry","question":"Total number of 5p electrons in I⁻ =","answer":18},
+    {"id":52,"type":"integer","subject":"Chemistry","question":"If log₁₀K = 20 − 10√2, then pKₐ of weak acid =","answer":6},
+    {"id":53,"type":"integer","subject":"Chemistry","question":"Number of oxygen atoms in 27 g of Al₂(SO₄)₃ =","answer":36},
+    {"id":54,"type":"integer","subject":"Chemistry","question":"The depression in freezing point of 0.1 m aqueous solution of a weak acid (α = 0.1) is x × 0.186 K. x =","answer":11},
+    {"id":55,"type":"integer","subject":"Chemistry","question":"The coordination number of Na⁺ in Na₂O (antifluorite structure) =","answer":4},
+
+    {"id":61,"type":"mcq","subject":"Mathematics","question":"Let α, β be roots of x² − px + q = 0. If α⁴ + β⁴ = 2p² − 8q + 10, then p² − 4q =","options":["2","4","6","8"],"answer":2},
+    {"id":62,"type":"mcq","subject":"Mathematics","question":"The number of solutions of |sin x| + |cos x| = √2 sin(x + π/4) is:","options":["0","2","4","8"],"answer":2},
+    {"id":63,"type":"mcq","subject":"Mathematics","question":"If the lines x−1 = λ(y−2) = μ(z−3) and x+1 = 2(y+1) = 3(z−1) are coplanar, then λ + μ + 1/λ + 1/μ =","options":["4","8","−8","−4"],"answer":1},
+
+  
+    {"id":81,"type":"integer","subject":"Mathematics","question":"If the coefficient of x⁷ in (ax² + 1/bx)¹² is equal to coefficient of x⁻⁷ in (ax − 1/bx)¹², then ab =","answer":1},
+    {"id":82,"type":"integer","subject":"Mathematics","question":"Let z = cis θ, then |z² + z + 1|² + |z² − ωz + 1|² + |z² − ω²z + 1|² = 18. The value of sin²θ =","answer":3},
+    {"id":83,"type":"integer","subject":"Mathematics","question":"The number of integral values of k for which the equation 7cosx + 5sinx = 2k + 1 has solution is:","answer":7},
+    {"id":84,"type":"integer","subject":"Mathematics","question":"If ∫₀^π/² sin¹²x dx = π²/a, then a =","answer":4},
+    {"id":85,"type":"integer","subject":"Mathematics","question":"The number of real roots of the equation x⁷ − 7x⁵ + 14x³ − 7x + 1 = 0 is:","answer":5},
+    {"id":86,"type":"integer","subject":"Mathematics","question":"Let f(x) = x³ + ax² + bx + c have local max at x = −1 and local min at x = 1. If f(0) = 0, then |a| + |b| + |c| =","answer":6},
+    {"id":87,"type":"integer","subject":"Mathematics","question":"The number of non-congruent integer-sided triangles with perimeter 2025 is:","answer":337},
+    {"id":88,"type":"integer","subject":"Mathematics","question":"The value of ∫₀^∞ e⁻ˣ cos²x dx = π/a e⁻ᵇ, then a + b =","answer":5},
+    {"id":89,"type":"integer","subject":"Mathematics","question":"If the roots of x³ − 12x² + 39x − 28 = 0 are in A.P., then the common difference =","answer":3},
+    {"id":90,"type":"integer","subject":"Mathematics","question":"The number of ways to choose 3 elements from {1,2,…,20} such that no two are consecutive is:","answer":969}
+  ]
+}
