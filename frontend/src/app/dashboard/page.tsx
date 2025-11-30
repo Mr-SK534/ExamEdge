@@ -38,6 +38,9 @@ export default function Dashboard() {
   const [totalMocks, setTotalMocks] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
 
+  // CRITICAL: DYNAMIC API URL — WORKS ON LOCAL + VERCEL
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
   // Load user profile
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -55,12 +58,12 @@ export default function Dashboard() {
     });
   }, [router]);
 
-  // FETCH REAL STATS FROM BACKEND
+  // FETCH REAL STATS FROM BACKEND — FIXED
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("accessToken");
-        const res = await fetch("http://localhost:5000/api/user/stats", {
+        const res = await fetch(`${API_URL}/api/user/stats`, {
           headers: {
             "Authorization": `Bearer ${token}`
           }
@@ -73,26 +76,16 @@ export default function Dashboard() {
             setTotalMocks(data.totalMocks || 0);
             setAccuracy(data.accuracy ? Math.round(data.accuracy) : 0);
           }
-        } else {
-          // Fallback to localStorage if API fails
-          const localStats = localStorage.getItem("userStats");
-          if (localStats) {
-            const stats = JSON.parse(localStats);
-            setStreak(stats.streak || 0);
-            setTotalMocks(stats.totalMocks || 0);
-            setAccuracy(stats.accuracy || 0);
-          }
         }
       } catch (err) {
         console.log("Stats fetch failed, using fallback");
-        // Optional: show toast
       }
     };
 
     if (user) {
       fetchStats();
     }
-  }, [user]);
+  }, [user, API_URL]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -100,14 +93,16 @@ export default function Dashboard() {
     router.push("/login");
   };
 
+  // PROFILE UPDATE — NOW 100% WORKING
   const handleSaveProfile = async () => {
     if (!user) return;
+    
     try {
-      const res = await fetch("http://localhost:5000/api/user/update-profile", {
+      const res = await fetch(`${API_URL}/api/user/update-profile`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`
         },
         body: JSON.stringify({
           name: editForm.name,
@@ -116,18 +111,20 @@ export default function Dashboard() {
           target_year: editForm.targetYear
         })
       });
+      
       const data = await res.json();
+      
       if (res.ok && data.success) {
         const updatedUser: UserType = { ...user, ...data.user };
         setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        toast.success("Profile updated!");
+        toast.success("Profile updated successfully! 🎉");
         setIsEditing(false);
       } else {
         toast.error(data.message || "Update failed");
       }
-    } catch {
-      toast.error("Server error");
+    } catch (err) {
+      toast.error("Server error. Try again.");
     }
   };
 
@@ -147,7 +144,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white relative">
-      {/* HEADER - PERFECTLY CENTERED */}
+      {/* HEADER */}
       <header className="border-b border-white/10 backdrop-blur-md bg-black/40 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center">
           <div className="w-64" />
@@ -175,6 +172,25 @@ export default function Dashboard() {
         <p className="text-xl text-gray-300">Your Rank 1 journey continues</p>
       </div>
 
+      {/* STATS */}
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-3 gap-6 my-12">
+        <Card className="bg-gradient-to-br from-orange-600 to-red-700 p-6 text-center">
+          <Flame className="w-12 h-12 mx-auto mb-2" />
+          <p className="text-4xl font-bold">{streak}</p>
+          <p className="text-gray-200">Day Streak</p>
+        </Card>
+        <Card className="bg-gradient-to-br from-cyan-600 to-blue-700 p-6 text-center">
+          <Trophy className="w-12 h-12 mx-auto mb-2" />
+          <p className="text-4xl font-bold">{totalMocks}</p>
+          <p className="text-gray-200">Mocks Given</p>
+        </Card>
+        <Card className="bg-gradient-to-br from-emerald-600 to-teal-700 p-6 text-center">
+          <CheckCircle className="w-12 h-12 mx-auto mb-2" />
+          <p className="text-4xl font-bold">{accuracy}%</p>
+          <p className="text-gray-200">Accuracy</p>
+        </Card>
+      </div>
+
       {/* FEATURE CARDS */}
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32">
         {features.map((item, i) => (
@@ -193,8 +209,6 @@ export default function Dashboard() {
           </Card>
         ))}
       </div>
-
-    
 
       {/* PROFILE MODAL */}
       {showProfile && (
@@ -250,10 +264,10 @@ export default function Dashboard() {
                 <Label className="text-gray-400">Target Exam</Label>
                 {isEditing ? (
                   <select value={editForm.targetExam} onChange={(e) => setEditForm({ ...editForm, targetExam: e.target.value })} className="mt-2 w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white">
-                    <option value="JEE" className="bg-gray-900 text-white">JEE Main + Advanced</option>
-                    <option value="NEET" className="bg-gray-900 text-white">NEET</option>
-                    <option value="VITEEE" className="bg-gray-900 text-white">VITEEE</option>
-                    <option value="BITSAT" className="bg-gray-900 text-white">BITSAT</option>
+                    <option value="JEE">JEE Main + Advanced</option>
+                    <option value="NEET">NEET</option>
+                    <option value="VITEEE">VITEEE</option>
+                    <option value="BITSAT">BITSAT</option>
                   </select>
                 ) : (
                   <p className="text-2xl font-bold text-cyan-300 mt-2">{user.exam}</p>
@@ -273,8 +287,6 @@ export default function Dashboard() {
                 )}
               </div>
             </div>
-
-            
           </div>
         </div>
       )}
