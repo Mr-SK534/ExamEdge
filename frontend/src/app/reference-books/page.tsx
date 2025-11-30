@@ -8,7 +8,7 @@ const subjectsByExam: any = {
   JEE: ["Physics", "Chemistry", "Maths"],
   NEET: ["Physics", "Chemistry", "Biology"],
   BITSAT: ["Physics", "Chemistry", "Maths"],
-  NDA: ["Maths", "GAT"]
+  VITEEE: ["Physics", "Chemistry", "Maths"]
 };
 
 export default function ReferenceBooksPage() {
