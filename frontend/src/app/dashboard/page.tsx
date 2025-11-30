@@ -264,10 +264,10 @@ export default function Dashboard() {
                 <Label className="text-gray-400">Target Exam</Label>
                 {isEditing ? (
                   <select value={editForm.targetExam} onChange={(e) => setEditForm({ ...editForm, targetExam: e.target.value })} className="mt-2 w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white">
-                    <option value="JEE">JEE Main + Advanced</option>
-                    <option value="NEET">NEET</option>
-                    <option value="VITEEE">VITEEE</option>
-                    <option value="BITSAT">BITSAT</option>
+                    <option value="JEE" className="bg-gray-900 text-white">JEE Main + Advanced </option>
+                    <option value="NEET" className="bg-gray-900 text-white">NEET</option>
+                    <option value="VITEEE" className="bg-gray-900 text-white">VITEEE</option>
+                    <option value="BITSAT" className="bg-gray-900 text-white">BITSAT</option>
                   </select>
                 ) : (
                   <p className="text-2xl font-bold text-cyan-300 mt-2">{user.exam}</p>
