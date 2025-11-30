@@ -76,7 +76,7 @@ export default function MockTestPage() {
     localStorage.removeItem("currentMock");
     localStorage.removeItem("mockStartTime");
 
-    toast.success("Test Submitted Successfully! 🔥", { duration: 2000 });
+    toast.success("Test Submitted! 🔥", { duration: 2000 });
     setTimeout(() => router.push("/mock-test/result"), 2000);
   };
 
@@ -95,7 +95,7 @@ export default function MockTestPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-black text-white flex flex-col">
       {/* Header */}
-      <div className="bg-black/90 backdrop-blur-xl border-b border-cyan-500/30 sticky top-0 z-50 shadow-2xl">
+      <div className="bg-black/90 backdrop-blur-xl border-b border-cyan-500/30 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-8 py-6 flex justify-between items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
@@ -106,7 +106,7 @@ export default function MockTestPage() {
             </p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-400 uppercase tracking-wider">Time Remaining</p>
+            <p className="text-sm text-gray-400 uppercase tracking-wider">Time Left</p>
             <p className="text-5xl font-mono font-bold text-red-500 animate-pulse">
               {formatTime(timeLeft)}
             </p>
@@ -114,8 +114,8 @@ export default function MockTestPage() {
         </div>
       </div>
 
-      {/* Main Content - Takes all space */}
-      <div className="flex-1 max-w-5xl mx-auto w-full p-8 pb-32"> {/* pb-32 to make space for fixed buttons */}
+      {/* Main Content */}
+      <div className="flex-1 max-w-5xl mx-auto w-full p-8 pb-32">
         <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-2xl h-full">
           <div className="p-10 md:p-16">
             <h2 className="text-3xl md:text-4xl font-bold text-cyan-300 mb-12 leading-relaxed">
@@ -130,7 +130,7 @@ export default function MockTestPage() {
                   variant={answers[currentQuestion] === i ? "default" : "outline"}
                   className={`h-32 text-left text-xl font-medium transition-all ${
                     answers[currentQuestion] === i
-                      ? "bg-gradient-to-r from-cyan-500 to-emerald-500 border-2 border-cyan-300 shadow-2xl shadow-cyan-500/50"
+                      ? "bg-gradient-to-r from-cyan-500 to-emerald-500 border-2 border-cyan-300 shadow-2xl"
                       : "border-2 border-white/30 hover:border-cyan-400 hover:bg-white/10"
                   }`}
                 >
@@ -143,70 +143,48 @@ export default function MockTestPage() {
         </Card>
       </div>
 
-      {/* FIXED VERTICAL BUTTONS AT BOTTOM-RIGHT — LIKE REAL JEE EXAM */}
-      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
-        <div className="bg-black/80 backdrop-blur-xl rounded-2xl p-6 border border-cyan-500/50 shadow-2xl">
+      {/* FIXED VERTICAL BUTTONS ON LEFT SIDE — FINAL POSITION */}
+      <div className="fixed bottom-8 left-8 z-50">
+        <div className="bg-black/90 backdrop-blur-xl rounded-2xl p-6 border border-cyan-500/50 shadow-2xl">
           <div className="space-y-4">
 
-            {/* Previous */}
+            {/* Previous Button */}
             {currentQuestion > 0 && (
               <Button
                 onClick={() => setCurrentQuestion(c => c - 1)}
                 size="lg"
                 variant="outline"
-                className="w-64 py-8 text-xl font-bold border-2"
+                className="w-72 py-8 text-xl font-bold border-2"
               >
                 <ChevronLeft className="w-7 h-7 mr-3" />
                 Previous
               </Button>
             )}
 
-            {/* Next */}
+            {/* Next Button */}
             {!isLastQuestion && (
               <Button
                 onClick={() => setCurrentQuestion(c => c + 1)}
                 size="lg"
-                className="w-64 py-8 text-xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-xl"
+                className="w-72 py-8 text-xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-xl"
               >
                 Next
                 <ChevronRight className="w-7 h-7 ml-3" />
               </Button>
             )}
 
-            {/* Submit */}
+            {/* Submit Button */}
             {isLastQuestion && (
               <Button
                 onClick={handleFinalSubmit}
                 disabled={isFinished}
                 size="lg"
-                className="w-64 py-10 text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 shadow-2xl transform hover:scale-105 transition-all"
+                className="w-72 py-10 text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 shadow-2xl transform hover:scale-105 transition-all"
               >
                 <Send className="w-8 h-8 mr-4" />
                 {isFinished ? "Submitting..." : "SUBMIT TEST"}
               </Button>
             )}
-          </div>
-        </div>
-
-        {/* Question Palette - Small floating */}
-        <div className="bg-black/80 backdrop-blur-xl rounded-2xl p-4 border border-white/20">
-          <p className="text-center text-gray-400 text-sm mb-3 font-bold">Jump to Question</p>
-          <div className="grid grid-cols-6 gap-2 max-h-64 overflow-y-auto">
-            {mock.questions.map((_: any, i: number) => (
-              <div
-                key={i}
-                onClick={() => setCurrentQuestion(i)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold cursor-pointer transition-all ${
-                  i === currentQuestion
-                    ? "bg-yellow-500 text-black scale-110"
-                    : answers[i] !== undefined
-                    ? "bg-cyan-500"
-                    : "bg-gray-700 hover:bg-gray-600"
-                }`}
-              >
-                {i + 1}
-              </div>
-            ))}
           </div>
         </div>
       </div>
