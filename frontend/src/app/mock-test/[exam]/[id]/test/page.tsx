@@ -76,7 +76,7 @@ export default function MockTestPage() {
     localStorage.removeItem("currentMock");
     localStorage.removeItem("mockStartTime");
 
-    toast.success("Test Submitted! 🔥", { duration: 2000 });
+    toast.success("Test Submitted!", { duration: 2000 });
     setTimeout(() => router.push("/mock-test/result"), 2000);
   };
 
@@ -143,10 +143,10 @@ export default function MockTestPage() {
         </Card>
       </div>
 
-      {/* FIXED VERTICAL BUTTONS ON LEFT SIDE — FINAL POSITION */}
-      <div className="fixed bottom-8 left-8 z-50">
-        <div className="bg-black/90 backdrop-blur-xl rounded-2xl p-6 border border-cyan-500/50 shadow-2xl">
-          <div className="space-y-4">
+      {/* FIXED: CLEAN BUTTON BOX AT BOTTOM CENTER — PERFECT ALIGNMENT */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 transform -translate-x-1/2 z-50">
+        <div className="bg-black/90 backdrop-blur-2xl rounded-3xl p-8 border border-cyan-500/50 shadow-2xl">
+          <div className="flex items-center gap-6">
 
             {/* Previous Button */}
             {currentQuestion > 0 && (
@@ -154,9 +154,9 @@ export default function MockTestPage() {
                 onClick={() => setCurrentQuestion(c => c - 1)}
                 size="lg"
                 variant="outline"
-                className="w-72 py-8 text-xl font-bold border-2"
+                className="px-12 py-8 text-xl font-bold border-2 border-white/40 hover:border-cyan-400 hover:bg-white/10"
               >
-                <ChevronLeft className="w-7 h-7 mr-3" />
+                <ChevronLeft className="w-8 h-8 mr-3" />
                 Previous
               </Button>
             )}
@@ -166,10 +166,10 @@ export default function MockTestPage() {
               <Button
                 onClick={() => setCurrentQuestion(c => c + 1)}
                 size="lg"
-                className="w-72 py-8 text-xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-xl"
+                className="px-16 py-8 text-2xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-2xl transform hover:scale-105 transition-all mx-4"
               >
                 Next
-                <ChevronRight className="w-7 h-7 ml-3" />
+                <ChevronRight className="w-8 h-8 ml-4" />
               </Button>
             )}
 
@@ -179,9 +179,9 @@ export default function MockTestPage() {
                 onClick={handleFinalSubmit}
                 disabled={isFinished}
                 size="lg"
-                className="w-72 py-10 text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 shadow-2xl transform hover:scale-105 transition-all"
+                className="px-20 py-10 text-2xl font-bold bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 shadow-2xl transform hover:scale-110 transition-all"
               >
-                <Send className="w-8 h-8 mr-4" />
+                <Send className="w-9 h-9 mr-4" />
                 {isFinished ? "Submitting..." : "SUBMIT TEST"}
               </Button>
             )}
