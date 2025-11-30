@@ -69,7 +69,7 @@ export default function Register() {
                 ExamEdge
               </h1>
               <p className="text-cyan-100 text-lg sm:text-xl md:text-2xl mt-4 font-medium tracking-wide">
-                Join India's #1 JEE • NEET Platform
+                Built to Create Rank 1
               </p>
             </div>
 
