@@ -66,7 +66,7 @@ export default function MockPreviewPage() {
       return;
     }
 
-    // Save to localStorage
+    
     localStorage.setItem("currentMock", JSON.stringify(mock));
     localStorage.setItem("mockStartTime", Date.now().toString());
     localStorage.setItem("mockExam", exam);
@@ -77,7 +77,7 @@ export default function MockPreviewPage() {
     router.push(`/mock-test/${exam}/${id}/test`);
   };
 
-  // Loading State
+  
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-900 to-black flex items-center justify-center">
@@ -89,7 +89,7 @@ export default function MockPreviewPage() {
     );
   }
 
-  // Mock Not Found
+
   if (!mock) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-900 to-black flex items-center justify-center">

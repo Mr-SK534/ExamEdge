@@ -12,9 +12,7 @@ export default function AIDoubtSolverPage() {
   const [answer, setAnswer] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // -------------------------------
-  // SUBMIT HANDLER
-  // -------------------------------
+ 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);

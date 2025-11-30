@@ -1,23 +1,23 @@
-// route.ts (Next.js App Router, server-side)
+
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    // body should contain: { question: string, context?: string, reasoning?: boolean }
+
     const { question, context = '', reasoning = false } = body;
 
     if (!question || question.trim().length === 0) {
       return NextResponse.json({ error: 'Question is required' }, { status: 400 });
     }
 
-    // Do NOT put your OpenRouter key in client code.
+  
     const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
     if (!OPENROUTER_API_KEY) {
       return NextResponse.json({ error: 'Server: OPENROUTER_API_KEY not configured' }, { status: 500 });
     }
 
-    // Build messages (adaptable)
+
     const messages = [
       {
         role: 'system',
@@ -30,13 +30,13 @@ export async function POST(req: Request) {
       }
     ];
 
-    // Model & params
+
     const payload: any = {
-      model: "x-ai/grok-4.1-fast:free",      // the model on OpenRouter
+      model: "x-ai/grok-4.1-fast:free",      
       messages,
       max_tokens: 1200,
       temperature: 0.2,
-      // enable reasoning tokens if requested (OpenRouter supports reasoning param)
+      
       reasoning: { enabled: Boolean(reasoning) },
     };
 
@@ -45,9 +45,7 @@ export async function POST(req: Request) {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        // Optional OpenRouter headers (appearance on leaderboards) - remove if unwanted:
-        // 'HTTP-Referer': 'https://your-site.com',
-        // 'X-Title': 'ExamEdge',
+       
       },
       body: JSON.stringify(payload),
     });
@@ -59,8 +57,7 @@ export async function POST(req: Request) {
 
     const data = await resp.json();
 
-    // OpenRouter returns choices similar to OpenAI chat completions
-    // We'll extract the assistant text safely
+ 
     const assistantText =
       data?.choices?.[0]?.message?.content ??
       (typeof data?.choices?.[0]?.delta?.content === 'string' ? data.choices[0].delta.content : null) ??

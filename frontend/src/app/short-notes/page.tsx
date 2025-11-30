@@ -10,7 +10,6 @@ type UserType = {
   exam: string;
 };
 
-// === YOUR REAL GOOGLE DRIVE ZIP FILES ===
 const SHORT_NOTES: Record<string, { name: string; id: string }[]> = {
   physics: [
     { name: "Complete Physics Short Notes", id: "16qOf4iIDfojrFMdqtA_mS1BqSnu0DKvH" },

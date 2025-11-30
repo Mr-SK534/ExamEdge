@@ -11,7 +11,7 @@ export default function MonthlyPlannerPage() {
   const [plan, setPlan] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  // Get token on mount
+
   useEffect(() => {
     const t = localStorage.getItem("accessToken");
     setToken(t);
@@ -40,7 +40,7 @@ export default function MonthlyPlannerPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // ← THIS WAS MISSING — NOW FIXED
+          Authorization: `Bearer ${token}`, 
         },
         body: JSON.stringify({ 
           exam, 

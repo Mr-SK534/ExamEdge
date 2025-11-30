@@ -10,8 +10,7 @@ type UserType = {
   exam: "JEE" | "NEET" | "BITSAT" | "VITEEE";
 };
 
-// === GOOGLE DRIVE FILE IDs FOR REFERENCE BOOKS ===
-// Just add your ZIP file IDs here after uploading
+
 const REFERENCE_BOOKS: Record<string, Record<string, { name: string; id: string }[]>> = {
   JEE: {
     Physics: [

@@ -33,12 +33,12 @@ export default function Dashboard() {
     targetYear: ''
   });
 
-  // DYNAMIC STATS STATE
+  
   const [streak, setStreak] = useState(0);
   const [totalMocks, setTotalMocks] = useState(0);
   const [accuracy, setAccuracy] = useState(0);
 
-  // CRITICAL: DYNAMIC API URL — WORKS ON LOCAL + VERCEL
+  
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   // Load user profile
@@ -58,7 +58,7 @@ export default function Dashboard() {
     });
   }, [router]);
 
-  // FETCH REAL STATS FROM BACKEND — FIXED
+ 
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -93,7 +93,7 @@ export default function Dashboard() {
     router.push("/login");
   };
 
-  // PROFILE UPDATE — NOW 100% WORKING
+  // PROFILE UPDATE
   const handleSaveProfile = async () => {
     if (!user) return;
     
@@ -137,6 +137,7 @@ export default function Dashboard() {
     { title: "Question Bank", icon: FileText, color: "from-indigo-500 to-blue-700", href: "/question-bank" },
     { title: "Reference Book", icon: BookOpen, color: "from-purple-500 to-blue-600", href: "/reference-books" },
     { title: "Review My Attempts", icon: Trophy, color: "from-rose-500 to-red-600", href: "/mock-history" },
+    { title: "Motivation", icon: Trophy, color: "from-rose-500 to-red-600", href: "/motivation" },
   ];
 
   if (!user) return null;

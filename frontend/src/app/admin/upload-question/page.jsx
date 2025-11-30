@@ -129,9 +129,8 @@ export default function UploadQuestion() {
           <option value="">Select</option>
           <option>JEE</option>
           <option>NEET</option>
-          <option>NDA</option>
           <option>BITSAT</option>
-          <option>WBJEE</option>
+          <option>VITEEE</option>
         </select>
 
         <Button className="mt-8 bg-emerald-600 hover:bg-emerald-500" onClick={handleSubmit}>

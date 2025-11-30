@@ -4,7 +4,7 @@ import path from "path";
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
-    const folder = searchParams.get("folder"); // short-notes/physics
+    const folder = searchParams.get("folder");
 
     const dirPath = path.join(process.cwd(), "public", folder);
 
